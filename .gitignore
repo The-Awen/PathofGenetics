@@ -58,7 +58,6 @@ typings/
 .env
 
 # data in engine
-GeneticMicroservice/Data/*
 GeneticMicroservice/target/*
 GeneticMicroservice/Cargo.lock
 GeneticMicroservice/*.rs.bk
