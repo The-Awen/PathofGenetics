@@ -221,6 +221,7 @@ fn gen_random_tree(adjacencies: HashMap<u32, Vec<u32>>, possible_starts: &Vec<u3
     let mut cur_tree: Vec<u32> = Vec::new();
     let mut count = 0;
     let THRESHOLD = 123;
+    let mut possible_nexts: Vec<u32> = Vec::new();
 
     // roll a random number to choose possible start
     let rand_roll = rand::random::<usize>() % possible_starts.len();
@@ -234,7 +235,9 @@ fn gen_random_tree(adjacencies: HashMap<u32, Vec<u32>>, possible_starts: &Vec<u3
         let last_idx: usize = cur_tree.len() - 1;
         let adj_idx: u32 = cur_tree[last_idx];
         // find that node's adjacencies: ie: next possible nodes
-        let mut possible_nexts: Vec<u32> = adjacencies[&adj_idx].clone();
+        for i in adjacencies[&adj_idx].clone().iter_mut() {
+            possible_nexts.push(*i);
+        }
         
         // don't choose previously allocated nodes as possibilities
         possible_nexts.retain(|&x| !cur_tree.contains(&x));
@@ -249,6 +252,8 @@ fn gen_random_tree(adjacencies: HashMap<u32, Vec<u32>>, possible_starts: &Vec<u3
 
         // allocate new random choice
         cur_tree.push(possible_nexts[rand_roll]);
+
+        count += 1
     }
 
     cur_tree
