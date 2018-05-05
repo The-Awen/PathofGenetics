@@ -59,4 +59,5 @@ typings/
 
 # data in engine
 GeneticMicroservice/Data/
+GeneticMicroservice/target/
 GeneticMicroservice/*.swp
