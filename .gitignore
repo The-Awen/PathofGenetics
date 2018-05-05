@@ -60,4 +60,6 @@ typings/
 # data in engine
 GeneticMicroservice/Data/
 GeneticMicroservice/target/
+GeneticMicroservice/Cargo.lock
+GeneticMicroservice/*.rs.bk
 GeneticMicroservice/*.swp
