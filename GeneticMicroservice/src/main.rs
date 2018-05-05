@@ -83,6 +83,8 @@ struct Constants {
 }
 
 fn main() {
+
+    // ********** READ TREE JSON ********** \\
     let tree_path = Path::new("Data/SkillTree.txt").as_os_str();
     let mut f = File::open(tree_path).expect("File not found");
 
@@ -91,14 +93,51 @@ fn main() {
     
     let deserialized: Parent = serde_json::from_str(&contents).unwrap();
 
-    let mut adjacencies: HashMap<u32, Vec<u32>> = HashMap::new();
+    /*
 
-    for node in deserialized.nodes {
+    let mut adjacencies: HashMap<u32, Vec<u32>> = HashMap::new();
+    
+    // ********** BUILD ADJACENCIES ********** \\ 
+    for node in deserialized.nodes { 
         adjacencies.insert(node.id, node.out);
     }
 
-    println!("{:#?}", adjacencies);
+    //println!("{:#?}", adjacencies);
+    */
 
+    // ********** BUILD GRAPH ********** \\ 
+    //write_adjacency_file(adjacencies);
+
+
+    // ********** GET START POSITIONS ********** \\ 
+    // Generate a hashmap mapping CLASS_NAME : vector of ids of valid start nodes
+
+    let mut start_ids: HashMap<String, Vec<u32>> = HashMap::new();
+
+    let class_names = vec!["WITCH", "SIX", "RANGER", "DUELIST", "MARAUDER", "TEMPLAR"];
+    for node in deserialized.nodes { 
+        if class_names.contains(&&node.dn[..]) {
+            match &*node.dn {
+                "SIX" => start_ids.insert("SHADOW".to_string(), node.out),
+                _ => start_ids.insert(node.dn, node.out),
+            };
+        }
+    }
+
+    // EDGE CASES
+    
+    // group 93 has a vector called n. This is the scion start, including pathway to ascendant.
+    start_ids.insert("SCION".to_string(), deserialized.groups[&93].n.clone());
+
+    // the shadow start is missing a node, adding manually
+    start_ids.get_mut("SHADOW").unwrap().push(17788 as u32);
+    
+
+    println!("{:#?}", start_ids);
+
+}
+
+fn write_adjacency_file(adjacencies: HashMap<String, Vec<u32>>) {
     let viz_out = Path::new("Data/visualization.txt");
     let display = viz_out.display();
 
@@ -109,16 +148,17 @@ fn main() {
         Ok(file) => file,
     };
 
-
-
     buffer.write(b"digraph G {\n").unwrap();
 
     for (key, value) in adjacencies {
-        if value.len() <= 1 {
-            let mut value_string = value[0]to_string();
+        if value.len() < 1 {
+            let line = [key.to_string(), " -> ".to_string(), "000\n".to_string()].join("");
+            buffer.write(line.as_bytes());
+            continue;
         }
-        else {
-            for v in value[1..]{
+        let mut value_string = value[0].to_string();
+        if value.len() > 1 {
+            for v in value{
                 value_string = [value_string, v.to_string()].join(",");
             }
         }
@@ -126,4 +166,5 @@ fn main() {
         buffer.write(line.as_bytes());
     }
     buffer.write(b"}\n").unwrap();
+
 }
