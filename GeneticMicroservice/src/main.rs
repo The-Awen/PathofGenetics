@@ -32,7 +32,7 @@ struct CharacterData {
     base_int: u32,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 struct Group {
     x: f32,
     y: f32,
@@ -83,8 +83,6 @@ struct Constants {
     orbitRadii: Vec<u32>,
 }
 
-
-
 fn main() {
     // basic testing to see if parsing works
     let tree_path = Path::new("Data/SkillTree.txt").as_os_str();
@@ -94,6 +92,17 @@ fn main() {
     f.read_to_string(&mut contents).expect("Error reading file.");
     
     let deserialized: Parent = serde_json::from_str(&contents).unwrap();
-    println!("{:?}", deserialized);
+    //preprocess(deserialized);
+    //println!("{:?}", deserialized);
 
+}
+
+fn preprocess(json_obj: Parent) -> Parent {
+    // remove the cloning
+    let groups = json_obj.groups.clone();
+    for (key, value) in &groups {
+        println!("{:?} :: {:?}", key, value);
+    }
+
+    json_obj
 }
