@@ -1,0 +1,9 @@
+[package]
+name = "PathofGenetics"
+version = "0.1.0"
+authors = ["sremedios <sam.remedios@gmail.com>"]
+
+[dependencies]
+serde = "1"
+serde_json = "1"
+serde_derive = "1"
