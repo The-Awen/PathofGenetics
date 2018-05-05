@@ -36,8 +36,7 @@ struct CharacterData {
 struct Group {
     x: f32,
     y: f32,
-    // TODO: figure out how serde handles multiple types for the same name
-    //oo: HashMap<String, bool>,
+    oo: serde_json::Value,
     n: Vec<u32>,
 }
 
@@ -84,7 +83,6 @@ struct Constants {
 }
 
 fn main() {
-    // basic testing to see if parsing works
     let tree_path = Path::new("Data/SkillTree.txt").as_os_str();
     let mut f = File::open(tree_path).expect("File not found");
 
@@ -92,17 +90,40 @@ fn main() {
     f.read_to_string(&mut contents).expect("Error reading file.");
     
     let deserialized: Parent = serde_json::from_str(&contents).unwrap();
-    //preprocess(deserialized);
-    //println!("{:?}", deserialized);
 
-}
+    let mut adjacencies: HashMap<u32, Vec<u32>> = HashMap::new();
 
-fn preprocess(json_obj: Parent) -> Parent {
-    // remove the cloning
-    let groups = json_obj.groups.clone();
-    for (key, value) in &groups {
-        println!("{:?} :: {:?}", key, value);
+    for node in deserialized.nodes {
+        adjacencies.insert(node.id, node.out);
     }
 
-    json_obj
+    println!("{:#?}", adjacencies);
+
+    let viz_out = Path::new("Data/visualization.txt");
+    let display = viz_out.display();
+
+    let mut buffer = match File::create(viz_out) {
+        Err(why) => panic!("failed to make {}: {:?}",
+                           display,
+                           why),
+        Ok(file) => file,
+    };
+
+
+
+    buffer.write(b"digraph G {\n").unwrap();
+
+    for (key, value) in adjacencies {
+        if value.len() <= 1 {
+            let mut value_string = value[0]to_string();
+        }
+        else {
+            for v in value[1..]{
+                value_string = [value_string, v.to_string()].join(",");
+            }
+        }
+        let line = [key.to_string(), " -> ".to_string(), value_string, "\n".to_string()].join("");
+        buffer.write(line.as_bytes());
+    }
+    buffer.write(b"}\n").unwrap();
 }
