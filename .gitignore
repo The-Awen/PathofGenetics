@@ -58,4 +58,4 @@ typings/
 .env
 
 # firebase
-*/firebase.json
+WebServer/config/firebase.json
