@@ -33,9 +33,9 @@ fn main() {
     let root_url = "http://www.pathofexile.com/passive-skill-tree/3.2.3/";
     let adjacencies = calculate_adjacencies(&deserialized);
     let start_ids = get_starts(&adjacencies, deserialized);
-    let player_class: PlayerClass = PlayerClass::Duelist;
+    let player_class: PlayerClass = PlayerClass::Ranger;
     let ascendant_class_id: u8 = 1;
-    let class_name: String = "DUELIST".to_string();
+    let class_name: String = "RANGER".to_string();
     let version: u32 = 4;
     let threshold: u16 = 123; // number of nodes to make
 

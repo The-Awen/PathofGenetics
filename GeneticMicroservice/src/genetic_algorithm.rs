@@ -174,7 +174,10 @@ pub fn gen_random_tree(
         }
 
         // sort possible_nexts
-        possible_nexts.sort();
+        possible_nexts.sort_unstable();
+
+        // kill dups
+        possible_nexts.dedup();
 
         // roll again
         let rand_roll = rand::random::<usize>() % possible_nexts.len();
@@ -204,7 +207,8 @@ pub fn get_nodes(
 
     // follow directions one step at a time
     for decision in decisions {
-        possible_nexts.sort();
+        possible_nexts.sort_unstable();
+        possible_nexts.dedup();
 
         // allocate that node
         let mut modded_decision = *decision % possible_nexts.len() as u16;
