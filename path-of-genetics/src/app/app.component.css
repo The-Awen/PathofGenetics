@@ -1,0 +1,37 @@
+@media screen {
+  /* Generic pane rules */
+  body {
+    margin: 0
+  }
+  .row, .col {
+    overflow: hidden;
+    position: absolute;
+  }
+  .row {
+    left: 0;
+    right: 0;
+  }
+  .col {
+    top: 0;
+    bottom: 0;
+  }
+  .scroll-x {
+    overflow-x: auto;
+  }
+  .scroll-y {
+    overflow-y: auto;
+  }
+  .header.row {
+    height: 64px;
+    top: 0;
+  }
+  .body.row {
+    top: 64px;
+    bottom: 50px;
+  }
+  .footer.row {
+    height: 50px;
+    bottom: 0;
+    text-align: center
+  }
+}

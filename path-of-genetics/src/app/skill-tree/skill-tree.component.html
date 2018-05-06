@@ -1,0 +1,6 @@
+<div class="page-details">
+  <canvas id="skillTreeCanvas" [attr.width]="canvasWidth" [attr.height]="canvasHeight" (mousedown)="LocalMouseDowns.next($event)"
+    (mousemove)="LocalMouseMoves.next($event)" (touchstart)="LocalMouseDowns.next($event)" (touchmove)="LocalMouseMoves.next($event)"
+    (mouseup)="LocalMouseUps.next($event)" (touchend)="LocalMouseUps.next($event)" (wheel)="MouseWheels.next($event)"></canvas>
+  <poe-node-details [mouse-position]="lastMouseCoordinate"></poe-node-details>
+</div>
