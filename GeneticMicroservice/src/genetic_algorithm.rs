@@ -68,7 +68,7 @@ impl Phenotype<MyFitness> for MyData {
         // crossover as a random split in the decisions
         // here the crossover is average
         let mut vec: Vec<u16> = self.decisions.clone();
-        let rand_idx = rand::random::<usize>() % vec.len() / 2;
+        let rand_idx = rand::random::<usize>() % vec.len();
         let vec2 = vec.split_off(rand_idx);
 
         let mut vec3: Vec<u16> = other.decisions.clone();
@@ -208,12 +208,13 @@ pub fn get_nodes(
         possible_nexts.sort();
 
         // allocate that node
-        tree_nodes.push(possible_nexts[*decision as usize]);
+        let mut modded_decision = *decision % possible_nexts.len() as u16;
+        tree_nodes.push(possible_nexts[modded_decision as usize]);
 
         let last_idx: usize = tree_nodes.len() - 1;
         let adj_idx: u16 = tree_nodes[last_idx];
         // find that node's adjacencies: ie: next possible nodes
-        for i in adjacencies[&adj_idx].clone().iter_mut() {
+        for i in adjacencies[&adj_idx].clone().iter() {
             possible_nexts.push(*i);
         }
 

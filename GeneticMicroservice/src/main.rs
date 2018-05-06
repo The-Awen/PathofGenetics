@@ -30,6 +30,7 @@ fn main() {
     let deserialized: Parent = get_json(tree_path);
 
     // ********** PARAMETERS ********** \\
+    let root_url = "http://www.pathofexile.com/passive-skill-tree/3.2.3/";
     let adjacencies = calculate_adjacencies(&deserialized);
     let start_ids = get_starts(&adjacencies, deserialized);
     let player_class: PlayerClass = PlayerClass::Duelist;
@@ -60,11 +61,11 @@ fn main() {
         tree_constants.ascendant_class_id,
         tree_nodes,
     );
-    println!("{}", passive_skill_tree.to_string());
+    println!("{}{}", root_url, passive_skill_tree.to_string());
 
     // ********** GENERATE RANDOM POPULATION ********** \\
     // make a population
-    let max_pop: usize = 1e3 as usize;
+    let max_pop: usize = 1e2 as usize;
     let epochs: u64 = 10;
     let mut intermediate_pop: Vec<(Vec<u16>, Vec<u16>)> = (0..max_pop)
         .map(|_i| {
@@ -111,5 +112,5 @@ fn main() {
         result.tree_nodes.clone(),
     );
 
-    println!("{}", passive_skill_tree.to_string());
+    println!("{}{}", root_url, passive_skill_tree.to_string());
 }
