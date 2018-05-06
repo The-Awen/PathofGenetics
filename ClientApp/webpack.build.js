@@ -4,7 +4,6 @@ const commonConfig = require("./webpack.common.js");
 
 module.exports = webpackMerge.smart(commonConfig,
 {
-	debug: false,
 	plugins:
 	[
 		new webpack.optimize.UglifyJsPlugin({mangle: false})

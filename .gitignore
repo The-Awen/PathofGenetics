@@ -59,3 +59,5 @@ typings/
 
 # firebase
 WebServer/config/firebase.json
+
+/ClientApp/build/*
