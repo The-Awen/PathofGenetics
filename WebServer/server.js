@@ -47,6 +47,10 @@ app.post("/build", function(req, res, next) {
                 parameters,
                 progress: build.progress
             });
+
+            if (build.progress === 100) {
+                ws.close();
+            }
         });    
     });
     
