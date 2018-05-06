@@ -7,6 +7,13 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::collections::HashMap;
 
+use base64;
+use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
+
+use std::fmt;
+use std::io;
+use std::str::FromStr;
+
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Parent {
@@ -35,7 +42,7 @@ struct Group {
     x: f32,
     y: f32,
     oo: serde_json::Value,
-    n: Vec<u32>,
+    n: Vec<u16>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -45,12 +52,12 @@ struct Root {
     oidx: u32,
     sa: u32,
     da: u32,
-    out: Vec<u32>,
+    out: Vec<u16>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Node {
-    id: u32,
+    id: u16,
     icon: String,
     ks: bool,
     not: bool,
@@ -68,11 +75,11 @@ pub struct Node {
     sa: u32,
     da: u32,
     ia: u32,
-    out: Vec<u32>,
+    out: Vec<u16>,
     #[serde(default)]
     isAscendancyStart: bool,
     #[serde(default)]
-    adjacencies: Vec<u32>,
+    adjacencies: Vec<u16>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -86,8 +93,8 @@ struct Constants {
 
 // Build a hashmap mapping each node to its adjacent nodes. This double-connects
 // each node such that the value of the map 
-pub fn calculate_adjacencies(parent: &Parent) -> HashMap<u32, Vec<u32>> {
-    let mut adjacencies: HashMap<u32, Vec<u32>> = HashMap::new();
+pub fn calculate_adjacencies(parent: &Parent) -> HashMap<u16, Vec<u16>> {
+    let mut adjacencies: HashMap<u16, Vec<u16>> = HashMap::new();
 
     for node in &parent.nodes { 
         adjacencies.insert(node.id, node.out.clone());
@@ -116,7 +123,7 @@ pub fn get_json(filepath: &str) -> Parent {
     serde_json::from_str(&contents).unwrap()
 }
 
-pub fn write_adjacency_file(adjacencies: HashMap<String, Vec<u32>>) {
+pub fn write_adjacency_file(adjacencies: HashMap<String, Vec<u16>>) {
     let viz_out = Path::new("Data/visualization.txt");
     let display = viz_out.display();
 
@@ -151,7 +158,7 @@ pub fn write_adjacency_file(adjacencies: HashMap<String, Vec<u32>>) {
 
 
 // Given some ID, return the associated description string
-pub fn get_description(id: u32, all_nodes: &Vec<Node>) -> String {
+pub fn get_description(id: u16, all_nodes: &Vec<Node>) -> String {
     let mut description: String = String::new();
     for node in all_nodes {
         if node.id == id {
@@ -162,16 +169,16 @@ pub fn get_description(id: u32, all_nodes: &Vec<Node>) -> String {
     description
 }
 
-pub fn get_starts(adjacencies: &HashMap<u32, Vec<u32>>, 
-              deserialized: Parent) -> HashMap<String, Vec<u32>> {
+pub fn get_starts(adjacencies: &HashMap<u16, Vec<u16>>, 
+              deserialized: Parent) -> HashMap<String, Vec<u16>> {
 
     // ********** GET START POSITIONS ********** \\ 
     // Generate a hashmap mapping CLASS_NAME : vector of ids of valid start nodes
 
-    let mut start_ids: HashMap<String, Vec<u32>> = HashMap::new();
+    let mut start_ids: HashMap<String, Vec<u16>> = HashMap::new();
 
     let class_names = vec!["WITCH", "SIX", "RANGER", "DUELIST", "MARAUDER", "TEMPLAR"];
-    let mut ascendancy_ids: Vec<u32> = Vec::new();
+    let mut ascendancy_ids: Vec<u16> = Vec::new();
     for mut node in deserialized.nodes { 
 
         if node.isAscendancyStart {
@@ -189,7 +196,7 @@ pub fn get_starts(adjacencies: &HashMap<u32, Vec<u32>>,
         }
     }
     // group 93 has a vector called n. This is the scion start, including pathway to ascendant.
-    let mut scion_next: Vec<u32> = deserialized.groups[&93].n.clone();
+    let mut scion_next: Vec<u16> = deserialized.groups[&93].n.clone();
     scion_next.remove_item(&58833);
     start_ids.insert("SCION".to_string(), scion_next);
     // also remove dummy head for scion
@@ -201,5 +208,85 @@ pub fn get_starts(adjacencies: &HashMap<u32, Vec<u32>>,
     }
 
     start_ids
+}
+
+
+
+
+
+#[derive(Debug, PartialEq)]
+pub struct PassiveSkillTree {
+   version: u32,
+   class_id: u8,
+   ascendant_class_id: u8,
+   node_ids: Vec<u16>,
+}
+
+
+
+impl PassiveSkillTree {
+   pub fn new(version: u32, class_id: u8, ascendant_class_id: u8, node_ids: Vec<u16>) -> Self {
+       PassiveSkillTree {
+           version,
+           class_id,
+           ascendant_class_id,
+           node_ids,
+       }
+   }
+}
+
+
+
+impl fmt::Display for PassiveSkillTree {
+   fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+       // Create a byte buffer
+       let mut buf: Vec<u8> = Vec::with_capacity(6 + self.node_ids.len());
+       // Add the version
+       buf.write_u32::<BigEndian>(self.version)
+           .map_err(|_| fmt::Error)?;
+       buf.push(self.class_id);
+       buf.push(self.ascendant_class_id);
+       buf.push(0);
+       for node in &self.node_ids {
+           buf.write_u16::<BigEndian>(*node).map_err(|_| fmt::Error)?;
+       }
+       // Encode the buffer as base64
+       write!(
+           formatter,
+           "{}",
+           base64::encode(&buf).replace("+", "-").replace("/", "_")
+       )
+   }
+}
+
+
+
+impl FromStr for PassiveSkillTree {
+   type Err = io::Error;
+   fn from_str(s: &str) -> Result<Self, Self::Err> {
+       // Parse the base64
+       let buf: Vec<u8> = base64::decode(&s.replace("-", "+").replace("_", "/"))
+           .map_err(|err| io::Error::new(io::ErrorKind::Other, err))?;
+       // Create a cursor for reading bytes
+       let mut cur = io::Cursor::new(&buf);
+       // Read the version
+       let version: u32 = cur.read_u32::<BigEndian>()?;
+       // Read the class id, ascendant class id, and extra byte
+       let class_id = cur.read_u8()?;
+       let ascendant_class_id = cur.read_u8()?;
+       cur.read_u8()?;
+       // Read in the node IDS
+       let mut node_ids: Vec<u16> = Vec::new();
+       while let Ok(node_id) = cur.read_u16::<BigEndian>() {
+           node_ids.push(node_id);
+       }
+       // Return the skill tree
+       Ok(PassiveSkillTree {
+           version,
+           class_id,
+           ascendant_class_id,
+           node_ids,
+       })
+   }
 }
 

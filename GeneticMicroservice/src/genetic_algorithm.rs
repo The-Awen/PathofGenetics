@@ -93,29 +93,29 @@ impl Clone for MyData {
 // Generate a random tree. The possible_starts refers to a specified class
 // Returns (the tree nodes, the decisions to read that node, based on sorted
 // possible_next ids)
-pub fn gen_random_tree(adjacencies: &HashMap<u32, Vec<u32>>, 
-                       possible_starts: &Vec<u32>,
-                       threshold: u32) -> (Vec<u32>, Vec<u32>) {
+pub fn gen_random_tree(adjacencies: &HashMap<u16, Vec<u16>>, 
+                       possible_starts: &Vec<u16>,
+                       threshold: u16) -> (Vec<u16>, Vec<u16>) {
 
-    let mut cur_tree: Vec<u32> = Vec::new();
-    let mut decisions: Vec<u32> = Vec::new();
+    let mut cur_tree: Vec<u16> = Vec::new();
+    let mut decisions: Vec<u16> = Vec::new();
     let mut count = 0;
-    let mut sorted_starts: Vec<u32> = possible_starts.clone();
+    let mut sorted_starts: Vec<u16> = possible_starts.clone();
     sorted_starts.sort();
-    let mut possible_nexts: Vec<u32> = Vec::new();
+    let mut possible_nexts: Vec<u16> = Vec::new();
 
     // roll a random number to choose possible start
     let rand_roll = rand::random::<usize>() % sorted_starts.len();
     
     // allocate that node
     cur_tree.push(sorted_starts[rand_roll]);
-    decisions.push(rand_roll as u32);
+    decisions.push(rand_roll as u16);
     count += 1;
 
     while count < threshold {
 
         let last_idx: usize = cur_tree.len() - 1;
-        let adj_idx: u32 = cur_tree[last_idx];
+        let adj_idx: u16 = cur_tree[last_idx];
         // find that node's adjacencies: ie: next possible nodes
         for i in adjacencies[&adj_idx].clone().iter_mut() {
             possible_nexts.push(*i);
@@ -137,7 +137,7 @@ pub fn gen_random_tree(adjacencies: &HashMap<u32, Vec<u32>>,
 
         // allocate new random choice
         cur_tree.push(possible_nexts[rand_roll]);
-        decisions.push(rand_roll as u32);
+        decisions.push(rand_roll as u16);
 
         count += 1
     }
