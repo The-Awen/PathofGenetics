@@ -1,11 +1,13 @@
 use rand;
 use std::collections::HashMap;
 
-use rsgenetic::sim::*;
-use rsgenetic::sim::seq::Simulator;
-use rsgenetic::sim::select::*;
-use rsgenetic::pheno::*;
+use json_structs::*;
+
 use rand::distributions::{IndependentSample, Range};
+use rsgenetic::pheno::*;
+use rsgenetic::sim::select::*;
+use rsgenetic::sim::seq::Simulator;
+use rsgenetic::sim::*;
 use std::cmp::Ordering;
 
 struct MyFitness {
@@ -41,31 +43,46 @@ impl Fitness for MyFitness {
 }
 
 struct MyData {
-    decisions: Vec<u32>,
-    x: f64, //TODO: delete this
+    tree_nodes: Vec<u16>,
+    decisions: Vec<u16>,
+    strength_count: u16,
+}
+
+impl MyData {
+    fn calc_fitness(node_data: HashMap<u16, Vec<Node>>) -> u16 {
+        // TODO: get this going
+
+        0_u16
+    }
 }
 
 impl Phenotype<MyFitness> for MyData {
     fn fitness(&self) -> MyFitness {
         MyFitness {
             // TODO: replace with Path of Building damage calc
-            f: 10.0 - ((self.x + 3.0) * (self.x + 3.0)),
+            // For now, maximize number of strength nodes
+            f: self.strength_count as f64,
         }
     }
 
-    fn crossover(&self, other:&MyData) -> MyData {
+    fn crossover(&self, other: &MyData) -> MyData {
         // crossover as a random split in the decisions
         // here the crossover is average
-        let mut vec: Vec<u32> = self.decisions.clone();
+        let mut vec: Vec<u16> = self.decisions.clone();
         let rand_idx = rand::random::<usize>() % vec.len();
         let mut vec2 = vec.split_off(rand_idx);
-        let decisions = match rand::random::<u32>() % 2 {
+        let decisions = match rand::random::<u16>() % 2 {
             1 => vec,
             _ => vec2,
         };
+
+        let TMP_NODES: HashMap<u16, Vec<Node>> = HashMap::new();
+        let strength_count: u16 = MyData::calc_fitness(TMP_NODES);
+        let tree_nodes: Vec<u16> = Vec::new();
         MyData {
+            tree_nodes: tree_nodes,
             decisions: decisions,
-            x: 0.0,
+            strength_count: strength_count,
         }
     }
 
@@ -74,29 +91,38 @@ impl Phenotype<MyFitness> for MyData {
         // How to determine what is a valid tree mutation?
         // If we can determine valid tree mutations, invalid mutated trees
         // can just die
-        let between = Range::new(-1.0, 1.0);
-        let mut rng = rand::thread_rng();
-        let offset = between.ind_sample(&mut rng);
-        MyData { 
-            decisions: Vec::new(), 
-            x: self.x + offset }
+        // temporarily will just randomly add 1 to a decision
+        let idx = rand::random::<usize>() % self.decisions.len();
+        let mut new_decisions = self.decisions.clone();
+        let val = self.decisions[idx] + 1;
+        new_decisions[idx] = val;
+        let tree_nodes: Vec<u16> = Vec::new();
+        MyData {
+            tree_nodes: tree_nodes,
+            decisions: new_decisions,
+            strength_count: 0_u16,
+        }
     }
 }
 
 impl Clone for MyData {
     fn clone(&self) -> MyData {
-        MyData { decisions: self.decisions.clone(),
-        x: 0.0,}
+        MyData {
+            tree_nodes: self.tree_nodes.clone(),
+            decisions: self.decisions.clone(),
+            strength_count: self.strength_count,
+        }
     }
 }
 
 // Generate a random tree. The possible_starts refers to a specified class
 // Returns (the tree nodes, the decisions to read that node, based on sorted
 // possible_next ids)
-pub fn gen_random_tree(adjacencies: &HashMap<u16, Vec<u16>>, 
-                       possible_starts: &Vec<u16>,
-                       threshold: u16) -> (Vec<u16>, Vec<u16>) {
-
+pub fn gen_random_tree(
+    adjacencies: &HashMap<u16, Vec<u16>>,
+    possible_starts: &Vec<u16>,
+    threshold: u16,
+) -> (Vec<u16>, Vec<u16>) {
     let mut cur_tree: Vec<u16> = Vec::new();
     let mut decisions: Vec<u16> = Vec::new();
     let mut count = 0;
@@ -106,21 +132,20 @@ pub fn gen_random_tree(adjacencies: &HashMap<u16, Vec<u16>>,
 
     // roll a random number to choose possible start
     let rand_roll = rand::random::<usize>() % sorted_starts.len();
-    
+
     // allocate that node
     cur_tree.push(sorted_starts[rand_roll]);
     decisions.push(rand_roll as u16);
     count += 1;
 
     while count < threshold {
-
         let last_idx: usize = cur_tree.len() - 1;
         let adj_idx: u16 = cur_tree[last_idx];
         // find that node's adjacencies: ie: next possible nodes
         for i in adjacencies[&adj_idx].clone().iter_mut() {
             possible_nexts.push(*i);
         }
-        
+
         // don't choose previously allocated nodes as possibilities
         possible_nexts.retain(|&x| !cur_tree.contains(&x));
 
@@ -128,10 +153,10 @@ pub fn gen_random_tree(adjacencies: &HashMap<u16, Vec<u16>>,
         if possible_nexts.len() == 0 {
             return (cur_tree, decisions);
         }
-        
+
         // sort possible_nexts
         possible_nexts.sort();
-        
+
         // roll again
         let rand_roll = rand::random::<usize>() % possible_nexts.len();
 
