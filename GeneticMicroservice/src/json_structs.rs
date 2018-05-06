@@ -1,5 +1,3 @@
-use serde;
-use serde_derive;
 use serde_json;
 
 use std::collections::HashMap;
@@ -223,7 +221,7 @@ pub fn get_starts(
     start_ids
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum PlayerClass {
     Scion,
     Marauder,

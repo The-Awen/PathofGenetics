@@ -1,16 +1,9 @@
 use rand;
+use rsgenetic::pheno::*;
+use std::cmp::Ordering;
 use std::collections::HashMap;
 
-use json_structs::*;
-
-use rand::distributions::{IndependentSample, Range};
-use rsgenetic::pheno::*;
-use rsgenetic::sim::select::*;
-use rsgenetic::sim::seq::Simulator;
-use rsgenetic::sim::*;
-use std::cmp::Ordering;
-
-struct MyFitness {
+pub struct MyFitness {
     f: f64,
 }
 impl Eq for MyFitness {}
@@ -42,18 +35,11 @@ impl Fitness for MyFitness {
     }
 }
 
-struct MyData {
-    tree_nodes: Vec<u16>,
-    decisions: Vec<u16>,
-    strength_count: u16,
-}
-
-impl MyData {
-    fn calc_fitness(node_data: HashMap<u16, Vec<Node>>) -> u16 {
-        // TODO: get this going
-
-        0_u16
-    }
+// TODO: maybe this should be rolled into genetic_algorithm::PassiveSkillTree?
+pub struct MyData {
+    pub tree_string: String,
+    pub tree_nodes: Vec<u16>,
+    pub decisions: Vec<u16>,
 }
 
 impl Phenotype<MyFitness> for MyData {
@@ -61,7 +47,7 @@ impl Phenotype<MyFitness> for MyData {
         MyFitness {
             // TODO: replace with Path of Building damage calc
             // For now, maximize number of strength nodes
-            f: self.strength_count as f64,
+            f: 0_f64,
         }
     }
 
@@ -76,13 +62,13 @@ impl Phenotype<MyFitness> for MyData {
             _ => vec2,
         };
 
-        let TMP_NODES: HashMap<u16, Vec<Node>> = HashMap::new();
-        let strength_count: u16 = MyData::calc_fitness(TMP_NODES);
+        // TODO: get tree_nodes
         let tree_nodes: Vec<u16> = Vec::new();
+        let tree_string: String = String::new();
         MyData {
+            tree_string: tree_string,
             tree_nodes: tree_nodes,
             decisions: decisions,
-            strength_count: strength_count,
         }
     }
 
@@ -96,11 +82,14 @@ impl Phenotype<MyFitness> for MyData {
         let mut new_decisions = self.decisions.clone();
         let val = self.decisions[idx] + 1;
         new_decisions[idx] = val;
+
+        // TODO: get tree_nodes
         let tree_nodes: Vec<u16> = Vec::new();
+        let tree_string: String = String::new();
         MyData {
+            tree_string: tree_string,
             tree_nodes: tree_nodes,
             decisions: new_decisions,
-            strength_count: 0_u16,
         }
     }
 }
@@ -108,9 +97,9 @@ impl Phenotype<MyFitness> for MyData {
 impl Clone for MyData {
     fn clone(&self) -> MyData {
         MyData {
+            tree_string: self.tree_string.clone(),
             tree_nodes: self.tree_nodes.clone(),
             decisions: self.decisions.clone(),
-            strength_count: self.strength_count,
         }
     }
 }
