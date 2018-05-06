@@ -1,1 +1,1 @@
-C:\Users\Sam\Documents\PathofGenetics\GeneticMicroservice\target\debug\GeneticMicroservice.pdb: C:\Users\Sam\Documents\PathofGenetics\GeneticMicroservice\src\main.rs
+C:\Users\Sam\Documents\PathofGenetics\GeneticMicroservice\target\debug\GeneticMicroservice.pdb: C:\Users\Sam\Documents\PathofGenetics\GeneticMicroservice\src\genetic_algorithm.rs C:\Users\Sam\Documents\PathofGenetics\GeneticMicroservice\src\json_structs.rs C:\Users\Sam\Documents\PathofGenetics\GeneticMicroservice\src\main.rs
