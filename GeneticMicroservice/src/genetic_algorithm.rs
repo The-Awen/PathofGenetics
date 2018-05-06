@@ -58,7 +58,7 @@ impl Phenotype<MyFitness> for MyData {
     fn fitness(&self) -> MyFitness {
         MyFitness {
             // TODO: replace with Path of Building damage calc
-            // For now, maximize number of strength nodes
+            // For now, maximize life
             f: rand::random::<f64>(),
         }
     }
@@ -232,4 +232,16 @@ pub fn get_nodes(
 
     tree_nodes
 }
-// TODO: need function that returns the hashed string, send over socket
+
+fn get_life(tree_nodes: &Vec<u16>, node_map: &HashMap<u16, Node>) -> f64 {
+    let mut total_life: f64 = 0_f64;
+    for tree_node in tree_nodes {
+        for description in node_map[tree_node].sd.iter() {
+            if description.contains("increased maximum Life") {
+                let intermediate: Vec<&str> = description.split("%").collect();
+                total_life += intermediate[0].parse::<f64>().unwrap();
+            }
+        }
+    }
+    total_life
+}

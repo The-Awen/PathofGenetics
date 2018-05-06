@@ -18,7 +18,7 @@ pub struct Parent {
     characterData: HashMap<u32, CharacterData>,
     groups: HashMap<u32, Group>,
     root: Root,
-    nodes: Vec<Node>,
+    pub nodes: Vec<Node>,
     min_x: i32,
     min_y: i32,
     max_x: i32,
@@ -53,20 +53,20 @@ struct Root {
     out: Vec<u16>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Node {
-    id: u16,
+    pub id: u16,
     icon: String,
     ks: bool,
     not: bool,
-    dn: String,
+    pub dn: String,
     m: bool,
     isJewelSocket: bool,
     isMultipleChoice: bool,
     isMultipleChoiceOption: bool,
     passivePointsGranted: u32,
     spc: Vec<u32>,
-    sd: Vec<String>,
+    pub sd: Vec<String>,
     g: u32,
     o: u32,
     oidx: u32,
@@ -174,8 +174,15 @@ pub fn get_description(id: u16, all_nodes: &Vec<Node>) -> String {
             description = node.dn.clone();
         }
     }
-
     description
+}
+
+pub fn get_node_map(all_nodes: &Vec<Node>) -> HashMap<u16, Node> {
+    let mut map: HashMap<u16, Node> = HashMap::new();
+    for node in all_nodes {
+        map.insert(node.id, node.clone());
+    }
+    map
 }
 
 pub fn get_starts(

@@ -32,7 +32,9 @@ fn main() {
     // ********** PARAMETERS ********** \\
     let root_url = "http://www.pathofexile.com/passive-skill-tree/3.2.3/";
     let adjacencies = calculate_adjacencies(&deserialized);
+    let node_map = get_node_map(&deserialized.nodes);
     let start_ids = get_starts(&adjacencies, deserialized);
+
     let player_class: PlayerClass = PlayerClass::Ranger;
     let ascendant_class_id: u8 = 1;
     let class_name: String = "RANGER".to_string();
