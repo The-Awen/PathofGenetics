@@ -1,0 +1,36 @@
+.workspace {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.page-list {
+	border-right: 1px solid #444;
+	border-left: 0;
+	width: 300px;
+}
+
+.active-route {
+	width: calc(100% - 300px);
+	height: 100%;
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+
+	> * {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	router-outlet { display: none; }
+}
+
+poe-build-summary {
+	display: inline-block;
+	width: 100%;
+	user-select: none;
+	overflow-y: auto;
+	height: calc(100% - 260px);
+}

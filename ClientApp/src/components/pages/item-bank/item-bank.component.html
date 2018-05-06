@@ -1,0 +1,103 @@
+<div class="page-details item-editor" [state-path]="['itemState', 'bank', store.currentState.uiState.listSelectionIndex]">
+	<div class="item">
+		<field id="unique-name-field" [state-path]="['$', 'uiState', 'itemBank', 'uniqueName']">
+			<span class="label">Unique Name</span>
+			<combo-field [source]="uniqueItemsSelectItems"></combo-field>
+			<button class="trailing-content" *ngIf="currentUniqueItem !== undefined" (click)="syncUnique()">Sync Unique</button>
+		</field>
+		<div class="seperator"></div>
+		<div class="item-properties">
+			<field [state-path]="['name']">
+				<span class="label">Name</span>
+				<text-field></text-field>
+			</field>
+			<field [state-path]="['itemClass']" (onChange)="onItemClassChanged($event)">
+				<span class="label">Item Type</span>
+				<select-field [options]="itemClasses"></select-field>
+			</field>
+			<field id="base-type-field" [state-path]="['baseType']">
+				<span class="label">Base Type</span>
+				<select-field [options]="baseTypesForItemClass"></select-field>
+				<button class="trailing-content" *ngIf="currentBaseItem !== undefined" (click)="syncBaseTypeMods()">Sync Implicits</button>
+			</field>
+			<field id="quality-field" [state-path]="['quality']">
+				<span class="label">Quality</span>
+				<text-field></text-field>
+			</field>
+		</div>
+		<div class="modifiers" [state-path]="['implicitMods']">
+			<h2>Implicit Mods</h2>
+			<div class="headers">
+				<h3>Modifier</h3>
+				<h3>#1</h3>
+				<h3>#2</h3>
+				<h3>#3</h3>
+			</div>
+			<div class="modifier" *ngFor="let mod of selectedItem.implicitMods; let modIndex = index; trackBy:getModId" [state-path]="[modIndex]">
+				<field [state-path]="['text']">
+					<combo-field [source]="modifiersSelectItems" (input)="onModTextChanged(mod)"></combo-field>
+				</field>
+				<field *ngFor="let valueIndex of stats.numStatValues(mod.text)" [state-path]="['statValues', valueIndex]">
+					<text-field></text-field>
+				</field>
+			</div>
+			<button (click)="addModifier('implicitMods')">
+				<div class="icon-circle-plus"></div>
+				<div class="message">Add another modifier</div>
+			</button>
+		</div>
+		<div class="modifiers" [state-path]="['explicitMods']">
+			<h2>Explicit Mods</h2>
+			<div class="headers">
+				<h3>Modifier</h3>
+				<h3>#1</h3>
+				<h3>#2</h3>
+				<h3>#3</h3>
+			</div>
+			<div class="modifier" *ngFor="let mod of selectedItem.explicitMods; let modIndex = index; trackBy:getModId" [state-path]="[modIndex]">
+				<field [state-path]="['text']">
+					<combo-field [source]="modifiersSelectItems" (input)="onModTextChanged(mod)"></combo-field>
+				</field>
+				<field *ngFor="let valueIndex of stats.numStatValues(mod.text)" [state-path]="['statValues', valueIndex]">
+					<text-field></text-field>
+				</field>
+			</div>
+			<button (click)="addModifier('explicitMods')">
+				<div class="icon-circle-plus"></div>
+				<div class="message">Add another modifier</div>
+			</button>
+		</div>
+	</div>
+	<div class="stats">
+		<table>
+			<caption>Requirements</caption>
+			<tr *ngFor="let req of keyValuesAsList(currentBaseItem.requirements)">
+				<td>{{req.name}}</td>
+				<td>{{req.value}}</td>
+			</tr>
+		</table>
+		<table>
+			<caption>Base</caption>
+			<tr *ngFor="let prop of keyValuesAsList(currentBaseItem.properties)">
+				<td>{{prop.name}}</td>
+				<td>{{prop.value}}</td>
+			</tr>
+		</table>
+		<table>
+			<caption>Totals</caption>
+			<tr *ngFor="let calc of calculations">
+				<td>{{calc.text}}</td>
+				<td>{{calc.total}}</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<list-editor [object-factory]="itemFactory" [list-path]="['itemState', 'bank']" [item-content-template]="itemContent">
+	<span class="header">Items</span>
+	<ng-template #itemContent let-item="item">
+		<div class="list-item-details">
+			<div>{{item.name}}</div>
+		</div>
+	</ng-template>
+</list-editor>

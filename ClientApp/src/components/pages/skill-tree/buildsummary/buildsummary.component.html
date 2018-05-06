@@ -1,0 +1,22 @@
+<div [state-path]="['treeStates', store.currentState.uiState.listSelectionIndex]">
+	<field [state-path]="['name']">
+		<span class="label">Name</span>
+		<text-field></text-field>
+	</field>
+	<field [state-path]="['selectedClass']" [skipStateUpdate]="true" (onChange)="onClassChanged($event)">
+		<span class="label">Class</span>
+		<select-field [options]="availableClasses"></select-field>
+		<span class="trailing-content points">{{pointsSpent}} / 123</span>
+	</field>
+	<field [state-path]="['selectedSubClass']" [skipStateUpdate]="true" (onChange)="onSubClassChanged($event)">
+		<span class="label">Ascendancy</span>
+		<select-field [options]="availableSubClasses"></select-field>
+		<span class="trailing-content points">{{ascendancyPointsSpent}} / 8</span>
+	</field>
+</div>
+<div class="category" *ngFor="let category of categories">
+	<div class="category-name">{{category.name}}</div>
+	<div class="category-items">
+		<div class="category-item" *ngFor="let item of category.items">{{item}}</div>
+	</div>
+</div>

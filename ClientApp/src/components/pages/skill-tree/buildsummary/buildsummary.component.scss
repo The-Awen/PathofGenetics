@@ -1,0 +1,37 @@
+:host {
+	padding: 7px;
+	background-color: #2F2F2F;
+	box-sizing: border-box;
+	user-select: none;
+	font-size: 12px;
+}
+
+.category {
+	width: 100%;
+	display: block;
+	margin-top: 10px;
+}
+
+.category-name {
+	box-sizing: border-box;
+	color: white;
+	font-size: 14px;
+	background-color: slategrey;
+	border: 1px solid #CCCCCC;
+	padding: 3px;
+	width: 100%;
+}
+
+.category-items {
+	border: 1px solid white;
+	border-top: 0;
+	padding: 7px;
+	.category-item + .category-item { margin-top: 5px; }
+}
+
+:host /deep/ .field {
+	label { width: 75px; }
+	.trailing-content { margin-left: 3px; }
+	text-field, select-field { height: 28px; width: 140px; }
+	+ .field { margin-top: 3px; }
+}

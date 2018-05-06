@@ -1,0 +1,10 @@
+<span class="icon-search"></span>
+<input type="text" [ngModel]="state.currentObject" (keydown)="onKeyDown($event)" #input (focusin)="onFocusIn()" (focusout)="onFocusOut()" (ngModelChange)="onChange($event)">
+<div class="auto-complete-list" *ngIf="isOpen">
+	<div class="scroll-container" (wheel)="onWheel($event)">
+		<div class="auto-complete-window" [style.height.px]="numRowsDisplayed * rowHeight" (scroll)="onScroll($event)">
+			<div [style.height.px]="rowHeight * filteredList.length"></div>
+		</div>
+		<div *ngFor="let item of renderedRows; let index = index;" class="item" [style.top.px]="rowHeight * index - topRowOffset" [class.selected]="topRowIndex + index === selectedIndex" (mousedown)="itemSelected($event, item)">{{item.text}}</div>
+	</div>
+</div>

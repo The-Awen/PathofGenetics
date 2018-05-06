@@ -1,0 +1,12 @@
+<div class="page-list">
+	<h1>
+		<ng-content select=".header"></ng-content>
+	</h1>
+	<div class="page" *ngFor="let item of list; let i = index" [class.active]="selectedIndex === i" (click)="selectItem(i)">
+		<ng-template [ngTemplateOutlet]="itemContentTemplate" [ngOutletContext]="{item: item}"></ng-template>
+	</div>
+	<div class="actions">
+		<button class="add" (click)="add()">Add</button>
+		<button class="remove" (click)="remove()">Remove</button>
+	</div>
+</div>

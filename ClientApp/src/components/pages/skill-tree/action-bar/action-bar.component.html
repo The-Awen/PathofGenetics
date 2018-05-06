@@ -1,0 +1,24 @@
+<div class="action-bar">
+	<div class="actions">
+		<div class="action">
+			<div class="flyout" *ngIf="searchFlyoutVisible">
+				<field [state-path]="['uiState', 'skillTree', 'searchText']">
+					<text-field placeholder="Search..."></text-field>
+				</field>
+			</div>
+			<div class="icon-search icon" title="Search" (click)="searchFlyoutToggled()"></div>
+		</div>
+		<div class="action">
+			<div class="flyout" *ngIf="importFlyoutVisible">
+				<field [state-path]="['uiState', 'skillTree', 'importUrl']">
+					<text-field placeholder="{{loadFailed ? 'Failed' : 'Passive Tree URL'}}"></text-field>
+				</field>
+				<button (click)="onImportBuild()" (focus)="loadFailed = false">Import</button>
+			</div>
+			<div class="icon-box-remove icon" title="Import" (click)="importFlyoutToggled()"></div>
+		</div>
+		<div class="action">
+			<div class="icon-cross icon" title="Reset" (click)="onBuildReset()"></div>
+		</div>
+	</div>
+</div>

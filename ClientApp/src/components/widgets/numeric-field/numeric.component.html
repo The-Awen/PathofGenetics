@@ -1,0 +1,5 @@
+<input type="numeric" [ngModel]="state.currentObject" (keydown)="onKeyDown($event)" (change)="step(0)" (paste)="onPaste($event)">
+<div class="arrows">
+	<div class="arrow icon-arrow-up" (click)="step(1)"></div>
+	<div class="arrow icon-arrow-down" (click)="step(-1)"></div>
+</div>

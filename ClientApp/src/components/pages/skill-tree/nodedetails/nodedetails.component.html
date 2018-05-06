@@ -1,0 +1,13 @@
+<div *ngIf="currentNode != null" [style.top.px]="currentMousePosition.Y + 10" [style.left.px]="currentMousePosition.X + 10" class="node-details-container">
+	<div class="node-details">
+		<div class="name">
+			<span>{{currentNode.Name}}</span>
+			<div class="point-difference" [class.positive]="pointDifference > 0" [class.negative]="pointDifference < 0" *ngIf="currentNode != null && pointDifference != 0">
+				(<span *ngIf="pointDifference > 0">+</span><span>{{pointDifference}} pts</span>)
+			</div>
+		</div>
+		<div class="details">
+			<div *ngFor="let detail of currentNode.Details" class="detail">{{detail.Text}}</div>
+		</div>
+	</div>
+</div>

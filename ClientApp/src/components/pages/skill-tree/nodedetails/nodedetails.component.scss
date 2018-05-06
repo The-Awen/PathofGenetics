@@ -1,0 +1,36 @@
+.node-details-container {
+	position: absolute;
+	font-family: Arial;
+	.node-details {
+		color: #777;
+		background-color: #000;
+		opacity: .8;
+		border: 3px solid #4e4530;
+		padding: 10px;
+		max-width: 400px;
+	}
+	.node-details .name {
+		font-size: 18px;
+		font-weight: bold;
+	}
+	.node-details .details {
+		margin-top: 15px;
+		font-size: 14px;
+		line-height: 16px;
+	}
+	.node-details .detail+.detail {
+		margin-top: 5px;
+	}
+	.point-difference {
+		margin-left: 5px;
+		font-size: 18px;
+		font-weight: bold;
+		display: inline-block;
+		&.positive {
+			color: green;
+		}
+		&.negative {
+			color: red;
+		}
+	}
+}

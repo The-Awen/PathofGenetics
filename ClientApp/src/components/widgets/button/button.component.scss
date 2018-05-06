@@ -1,0 +1,58 @@
+:host {
+	background: #333;
+	background-image: linear-gradient(#444, #2d2d2d);
+	border-color: #111;
+	border-radius: 5px;
+	border-width: 1px;
+	border-style: solid;
+	text-shadow: 0 1px 0 #111;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .15);
+
+	box-sizing: border-box;
+	text-align: center;
+	cursor: pointer;
+	user-select: none;
+	height: 41px;
+	width: 100%;
+	vertical-align: middle;
+
+	position: relative;
+
+	&:before {
+		content: "";
+		display: inline-block;
+		height: 100%;
+		width: 0;
+		vertical-align: middle;
+	}
+
+	&:after {
+		content: "";
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 100%;
+		border-top: 1px solid rgba(255,255,255,.3);
+		border-radius: inherit;
+	}
+
+	&:hover {
+		background: #444;
+		background-image: linear-gradient(#555, #383838);
+		border-color: #000;
+	}
+
+	&:active {
+		background: #222;
+		background-image: linear-gradient(#202020, #2c2c2c);
+	}
+
+	&:focus {
+		box-shadow: 0 0 12px #38C;
+		position: relative;
+		z-index: 100;
+		outline: 0;
+	}
+}

@@ -1,0 +1,9 @@
+<div [style.width.px]="windowSize.Width" [style.height.px]="windowSize.Height" class="workspace">
+	<div class="page-list">
+		<div *ngFor="let route of routes" class="page" [routerLink]="'/' + route.data.name" routerLinkActive="active" preserveQueryParams="merge">{{route.data.title}}</div>
+		<poe-build-summary class="build-summary" *ngIf="router.url.startsWith('/skill-tree')"></poe-build-summary>
+	</div>
+	<div class="active-route">
+		<router-outlet></router-outlet>
+	</div>
+</div>

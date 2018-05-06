@@ -1,0 +1,14 @@
+<div class="page-details">
+	<poe-skill-tree-action-bar></poe-skill-tree-action-bar>
+	<canvas id="skillTreeCanvas" [attr.width]="canvasWidth" [attr.height]="canvasHeight" (mousedown)="LocalMouseDowns.next($event)" (mousemove)="LocalMouseMoves.next($event)" (touchstart)="LocalMouseDowns.next($event)" (touchmove)="LocalMouseMoves.next($event)" (mouseup)="LocalMouseUps.next($event)" (touchend)="LocalMouseUps.next($event)" (wheel)="MouseWheels.next($event)"></canvas>
+	<poe-node-details [mouse-position]="lastMouseCoordinate"></poe-node-details>
+</div>
+<list-editor [object-factory]="createNewTreeState" [list-path]="['treeStates']" [item-content-template]="itemContent">
+	<span class="header">Trees</span>
+	<ng-template #itemContent let-item="item">
+		<div class="list-item-details">
+			<div>{{item.name}}</div>
+			<div class="list-item-subtext">{{getClassName(item)}} ({{item.pointsSpent}} / 123) | {{getAscendancyClassName(item)}} ({{item.ascendancyPointsSpent}} / 8)</div>
+		</div>
+	</ng-template>
+</list-editor>

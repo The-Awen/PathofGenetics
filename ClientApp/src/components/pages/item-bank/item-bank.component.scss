@@ -1,0 +1,126 @@
+list-editor {
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 100%;
+}
+
+#unique-name-field {
+	width: 610px;
+	display: inline-block;
+
+	.field-input {
+		width: 300px;
+		display: inline-block;
+	}
+
+	.label {
+		width: 100px;
+		display: inline-block;
+	}
+
+	button {
+		display: inline-block;
+		width: 150px;
+		margin-left: 5px;
+	}
+}
+
+.seperator {
+	width: 610px;
+	height: 1px;
+	background-color: #444;
+	margin: 10px 0 10px 0;
+}
+
+.item {
+	width: 665px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.item .item-properties {
+	.field {
+		display: block;
+		+ .field { margin-top: 3px; };
+		.label { width: 100px; display: inline-block; }
+		.field-input { width: 400px; }
+	}
+
+	#base-type-field .field-input { width: 300px; }
+	#quality-field .field-input { width: 50px; }
+
+	button {
+		display: inline-block;
+		width: 150px;
+		margin-left: 5px;
+	}
+}
+
+.item .modifiers {
+	vertical-align: top;
+	display: inline-block;
+	width: 100%;
+	margin-top: 17px;
+
+	h2 {
+		text-align: left;
+		font-size: 24px;
+		margin-bottom: 10px;
+	}
+
+	.modifier {
+		margin-top: 3px;
+	}
+
+	.headers {
+		text-align: center;
+		h3 { display: inline-block; }
+		h3:first-of-type { width: 500px; }
+		h3:not(:first-of-type) { width: 50px; margin-left: 5px; }
+	}
+
+	.field {
+		display: inline-block;
+		&:first-of-type .field-input { width: 500px; }
+		&:not(:first-of-type) .field-input { width: 50px; margin-left: 5px; }
+	}
+
+	button {
+		margin-top: 10px;
+		.message, .icon-circle-plus { display: inline-block; vertical-align: middle; }
+		.message { margin-left: 7px; }
+	}
+}
+
+.stats {
+	width: 610px;
+	display: inline-block;
+	vertical-align: top;
+	padding: 5px;
+	margin-left: 10px;
+
+	table {
+		background-color: #222;
+		border-collapse: separate;
+		border: solid #444 1px;
+		border-radius: 6px;
+		width: 100%;
+	}
+
+	td {
+		padding: 10px;
+		border-left: solid #444 1px;
+		border-top: solid #444 1px;
+		&:first-child { border-left: 0; }
+	}
+
+	tr:first-child td { border-top: 0; }
+	table + table { margin-top: 7px; }
+}
+
+.list-item-details {
+	display: inline-block;
+	vertical-align: middle;
+}

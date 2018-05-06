@@ -1,0 +1,39 @@
+<div class="page-details" [state-path]="['gemState', 'gemSets', store.currentState.uiState.listSelectionIndex]">
+	<field [state-path]="['name']" class="gem-set-name">
+		<label class="label">Name</label>
+		<text-field></text-field>
+	</field>
+	<table class="gem-set">
+		<tr>
+			<th>Gem</th>
+			<th>Quality</th>
+			<th>Level</th>
+		</tr>
+		<tr *ngFor="let currentGemIndex of [0, 1, 2, 3, 4, 5]" [state-path]="['gems', currentGemIndex]">
+			<td>
+				<field [state-path]="['name']" class="gem-field">
+					<combo-field [source]="allGemsSelectItems"></combo-field>
+				</field>
+			</td>
+			<td>
+				<field [state-path]="['quality']" class="quality-field">
+					<numeric-field [min]="0" [max]="20"></numeric-field>
+				</field>
+			</td>
+			<td>
+				<field [state-path]="['level']" class="level-field">
+					<numeric-field [min]="0" [max]="20"></numeric-field>
+				</field>
+			</td>
+		</tr>
+	</table>
+</div>
+<list-editor [object-factory]="createNewGemSet" [list-path]="['gemState', 'gemSets']" [item-content-template]="itemContent">
+	<span class="header">Gem Sets</span>
+	<ng-template #itemContent let-item="item">
+		<span>{{item.name}}</span>
+	</ng-template>
+</list-editor>
+<datalist id="all-gems">
+	<option *ngFor="let gem of allGems" value="{{gem.name}}">{{gem.name}}</option>
+</datalist>

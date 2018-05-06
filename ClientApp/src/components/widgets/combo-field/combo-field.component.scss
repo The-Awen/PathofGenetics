@@ -1,0 +1,82 @@
+:host {
+	background-color: #222;
+	border-color: #444;
+	height: 41px;
+	text-shadow: 0 1px 0 #111;
+	box-shadow: inset 0 1px 3px rgba(0,0,0,.2);
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 5px;
+	background-clip: padding-box;
+	display: inline-block;
+	box-sizing: border-box;
+	position: relative;
+
+	&:before {
+		content: "";
+		display: inline-block;
+		vertical-align: middle;
+		width: 0;
+		height: 100%;
+	}
+
+	.icon-search {
+		display: inline-block;
+		vertical-align: middle;
+		width: 25px;
+		text-align: center;
+	}
+
+	input {
+		color: white;
+		background: transparent none;
+		display: inline-block;
+		vertical-align: middle;
+		width: calc(100% - 30px);
+		height: 80%;
+		box-sizing: border-box;
+		border: 0;
+		outline: 0;
+		padding: 4px 4px 4px 0;
+	}
+
+	:host-context(.field.focused) {
+		box-shadow: 0 0 12px #38C;
+		position: relative;
+		z-index: 100;
+	}
+
+	.auto-complete-list {
+		position: absolute;
+		width: 100%;
+	}
+
+	.scroll-container {
+		position: relative;
+		overflow: hidden;
+		width: 100%;
+
+		.auto-complete-window {
+			background-color: #222;
+			overflow-y: auto;
+			width: 100%;
+			border: 1px solid #444;
+			box-sizing: border-box;
+			z-index: 1;
+		}
+
+		.item {
+			padding: 3px;
+			cursor: pointer;
+			position: absolute;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			width: calc(100% - 23px);
+		}
+
+		.item.selected, .item:hover {
+			background-color: #5e87b0;
+		}
+	}
+}

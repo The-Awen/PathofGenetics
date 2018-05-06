@@ -1,0 +1,71 @@
+:host {
+	pointer-events: none;
+}
+
+.action-bar .actions {
+	display: inline-block;
+	font-size: 20px;
+	margin: 15px 15px 0 0;
+
+	.action {
+		pointer-events: initial;
+
+		.flyout {
+			display: inline-block;
+			vertical-align: middle;
+			margin-right: 10px;
+			font-size: 14px;
+
+			field {
+				display: inline-block;
+			}
+
+			text-field {
+				display: inline-block;
+				height: 28px;
+				text-field { width: 300px; }
+			}
+
+			button {
+				height: 28px;
+				margin-left: 3px;
+				width: 75px;
+			}
+		}
+
+		.icon {
+			background-color: rgba(255, 255, 255, 0.2);
+			padding: 10px;
+			display: inline-block;
+			cursor: pointer;
+			vertical-align: middle;
+		}
+
+		&:before {
+			content: "";
+			display: inline-block;
+			height: 100%;
+			width: 0;
+			vertical-align: middle;
+		}
+	}
+
+	.icon-search {
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		&:hover { color: #555; }
+		&:active { color: #AAAAAA; }
+	}
+
+	.icon-box-remove {
+		&:hover { color: #000055; }
+		&:active { color: #0000AA; }
+	}
+
+	.icon-cross {
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+		&:hover { color: #550000; }
+		&:active { color: #AA0000; }
+	}
+}
