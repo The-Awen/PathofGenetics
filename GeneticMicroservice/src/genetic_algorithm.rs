@@ -52,6 +52,7 @@ pub struct TreeConstants {
     pub ascendant_class_id: u8,
     pub adjacencies: HashMap<u16, Vec<u16>>,
     pub possible_starts: Vec<u16>,
+    pub node_map: HashMap<u16, Node>,
 }
 
 impl Phenotype<MyFitness> for MyData {
@@ -59,7 +60,7 @@ impl Phenotype<MyFitness> for MyData {
         MyFitness {
             // TODO: replace with Path of Building damage calc
             // For now, maximize life
-            f: rand::random::<f64>(),
+            f: get_life(&self.tree_nodes, &self.tree_constants.node_map),
         }
     }
 

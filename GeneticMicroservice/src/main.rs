@@ -35,9 +35,9 @@ fn main() {
     let node_map = get_node_map(&deserialized.nodes);
     let start_ids = get_starts(&adjacencies, deserialized);
 
-    let player_class: PlayerClass = PlayerClass::Ranger;
+    let player_class: PlayerClass = PlayerClass::Marauder;
     let ascendant_class_id: u8 = 1;
-    let class_name: String = "RANGER".to_string();
+    let class_name: String = "MARAUDER".to_string();
     let version: u32 = 4;
     let threshold: u16 = 123; // number of nodes to make
 
@@ -47,6 +47,7 @@ fn main() {
         ascendant_class_id: ascendant_class_id,
         adjacencies: adjacencies,
         possible_starts: start_ids[&class_name].clone(),
+        node_map: node_map.clone(),
     });
 
     // ********** GENERATE A RANDOM TREE ********** \\
@@ -68,7 +69,7 @@ fn main() {
     // ********** GENERATE RANDOM POPULATION ********** \\
     // make a population
     let max_pop: usize = 1e2 as usize;
-    let epochs: u64 = 10;
+    let epochs: u64 = 1000;
     let mut intermediate_pop: Vec<(Vec<u16>, Vec<u16>)> = (0..max_pop)
         .map(|_i| {
             gen_random_tree(
