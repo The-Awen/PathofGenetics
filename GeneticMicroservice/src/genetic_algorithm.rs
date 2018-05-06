@@ -59,8 +59,7 @@ impl Phenotype<MyFitness> for MyData {
         MyFitness {
             // TODO: replace with Path of Building damage calc
             // For now, maximize number of strength nodes
-            f: 1_f64,
-            //f: rand::random::<f64>(),
+            f: rand::random::<f64>(),
         }
     }
 

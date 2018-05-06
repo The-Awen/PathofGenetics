@@ -102,7 +102,7 @@ fn main() {
     s.run();
     let result = s.get().unwrap();
     let time = s.time();
-    println!("Execution time: {} ns.", time.unwrap());
+    println!("Execution time: {:.04} s.", time.unwrap() as f32 / 1e9);
 
     // convert nodes to a printable tree string
     let passive_skill_tree: PassiveSkillTree = PassiveSkillTree::new(
