@@ -10,6 +10,7 @@ module.exports = {
 		sourceMapFilename: "[name].map",
 		chunkFilename: "[id].chunk.js"
 	},
+	devtool: "source-map",
 	entry: {
 		"vendor": "./src/modules/vendor.ts",
 		"polyfill": "./src/modules/polyfill.ts",

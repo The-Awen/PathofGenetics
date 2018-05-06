@@ -7,6 +7,8 @@ export class SkillTreeDataParser {
 	private imageParser: ImageParser;
 
 	public constructor(private _skillTreeData: any, private _ascendancyClassData: any) {
+		
+
 		this.imageParser = new ImageParser(_skillTreeData);
 	}
 

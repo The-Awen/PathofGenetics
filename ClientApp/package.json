@@ -80,7 +80,7 @@
   },
   "scripts": {
     "build": "webpack --config webpack.build.js --progress --profile --bail",
-    "server": "webpack-dev-server --config webpack.dev.js --progress --profile --watch --content-base src/",
+    "server": "node  --max-old-space-size=8192 ./node_modules/.bin/webpack-dev-server --config webpack.dev.js --progress --profile --watch --content-base src/",
     "start": "npm run server"
   }
 }
