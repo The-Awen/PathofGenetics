@@ -5,6 +5,7 @@ extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
 extern crate rand;
+extern crate rsgenetic;
 
 mod json_structs;
 use json_structs::*;
@@ -31,8 +32,13 @@ fn main() {
     let start_ids = get_starts(&adjacencies, deserialized);
 
     // ********** GENERATE A RANDOM TREE ********** \\ 
-    let tree: Vec<u32> = gen_random_tree(&adjacencies, &start_ids[&"DUELIST".to_string()]);
+    let threshold: u32 = 123; // number of nodes to make
+    let (tree, decisions): (Vec<u32>, Vec<u32>) = gen_random_tree(&adjacencies, 
+                                                          &start_ids[&"DUELIST".to_string()],
+                                                          threshold);
 
-    println!("{:?}", tree);
+    println!("{:?}\n{:?}", tree, decisions);
+
+    println!("Lengths: {}, {}", tree.len(), decisions.len());
 
 }
