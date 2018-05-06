@@ -104,23 +104,31 @@ impl Phenotype<MyFitness> for MyData {
     }
 
     fn mutate(&self) -> MyData {
-        // TODO: how should we mutate? just flip a bit?
-        // How to determine what is a valid tree mutation?
-        // If we can determine valid tree mutations, invalid mutated trees
-        // can just die
-        //
-        // FOR NOW, NO MUTATION
-        /*
         let idx = rand::random::<usize>() % (self.decisions.len() + 1) / 2;
         let mut new_decisions = self.decisions.clone();
-        let val = self.decisions[idx] + 1;
+        let mut val = self.decisions[idx] + 1;
+
         new_decisions[idx] = val;
 
-        // TODO: get tree_nodes
-        let tree_nodes: Vec<u16> = Vec::new();
-        let tree_string: String = String::new();
-        */
-        self.clone()
+        let tree_nodes = get_nodes(
+            &self.tree_constants.adjacencies,
+            &self.tree_constants.possible_starts,
+            &new_decisions,
+        );
+
+        let tree_string = PassiveSkillTree::new(
+            self.tree_constants.version,
+            self.tree_constants.player_class.clone(),
+            self.tree_constants.ascendant_class_id,
+            tree_nodes.clone(),
+        ).to_string();
+
+        MyData {
+            tree_constants: self.tree_constants.clone(),
+            tree_string: tree_string,
+            tree_nodes: tree_nodes,
+            decisions: new_decisions,
+        }
     }
 }
 
@@ -180,6 +188,11 @@ pub fn gen_random_tree(
         // kill dups
         possible_nexts.dedup();
 
+        // increase chance of most recently-added node's nexts to be chosen
+        for i in adjacencies[&adj_idx].clone().iter_mut() {
+            possible_nexts.push(*i);
+        }
+
         // roll again
         let rand_roll = rand::random::<usize>() % possible_nexts.len();
 
@@ -238,9 +251,12 @@ fn get_life(tree_nodes: &Vec<u16>, node_map: &HashMap<u16, Node>) -> f64 {
     let mut total_life: f64 = 0_f64;
     for tree_node in tree_nodes {
         for description in node_map[tree_node].sd.iter() {
+            // TODO: get real parser here
             if description.contains("increased maximum Life") {
                 let intermediate: Vec<&str> = description.split("%").collect();
-                total_life += intermediate[0].parse::<f64>().unwrap();
+                let intermediate: Vec<&str> = intermediate[0].split(" ").collect();
+                let idx = intermediate.len() - 1;
+                total_life += intermediate[idx].parse::<f64>().unwrap();
             }
         }
     }

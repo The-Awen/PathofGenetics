@@ -35,9 +35,9 @@ fn main() {
     let node_map = get_node_map(&deserialized.nodes);
     let start_ids = get_starts(&adjacencies, deserialized);
 
-    let player_class: PlayerClass = PlayerClass::Marauder;
+    let player_class: PlayerClass = PlayerClass::Scion;
     let ascendant_class_id: u8 = 1;
-    let class_name: String = "MARAUDER".to_string();
+    let class_name: String = "SCION".to_string();
     let version: u32 = 4;
     let threshold: u16 = 123; // number of nodes to make
 
@@ -68,7 +68,9 @@ fn main() {
 
     // ********** GENERATE RANDOM POPULATION ********** \\
     // make a population
-    let max_pop: usize = 1e2 as usize;
+    println!("\nMaking population");
+    let max_pop: usize = 20 as usize;
+    let num_parents: usize = 10 as usize;
     let epochs: u64 = 1000;
     let mut intermediate_pop: Vec<(Vec<u16>, Vec<u16>)> = (0..max_pop)
         .map(|_i| {
@@ -82,6 +84,7 @@ fn main() {
 
     let mut population: Vec<MyData> = Vec::new();
 
+    println!("\nGenerating data structures for crossover");
     for tree in intermediate_pop.iter_mut() {
         let tmp_passive_skill_tree = PassiveSkillTree::new(
             tree_constants.version,
@@ -98,8 +101,9 @@ fn main() {
         population.push(data_point.clone());
     }
 
+    println!("\nSimulating");
     let mut s = Simulator::builder(&mut population)
-        .set_selector(Box::new(StochasticSelector::new(10)))
+        .set_selector(Box::new(StochasticSelector::new(num_parents)))
         .set_max_iters(epochs)
         .build();
     s.run();
