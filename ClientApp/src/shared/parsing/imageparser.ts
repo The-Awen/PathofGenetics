@@ -142,7 +142,8 @@ export class ImageParser {
 	}
 
 	public ParseGroupBackground(groupData: any): Immutable.List<SkillTreeImage> {
-		var keys = Immutable.Map<string, string>(groupData.oo).keySeq().map(k => parseInt(k)).filter(key => key <= 3);
+		if (Array.isArray(groupData.oo)) return Immutable.List(new Array<SkillTreeImage>());
+		let keys: Immutable.Iterable<number, number> = Immutable.Map<string, string>(groupData.oo).keySeq().map(k => parseInt(k)).filter(key => key <= 3);
 		if (keys.isEmpty()) return Immutable.List(new Array<SkillTreeImage>());
 		var backgroundIndex = keys.max(k => k);
 		if (backgroundIndex == 0) return Immutable.List(new Array<SkillTreeImage>());
