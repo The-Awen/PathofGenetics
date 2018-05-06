@@ -114,7 +114,7 @@ pub fn calculate_adjacencies(parent: &Parent) -> HashMap<u16, Vec<u16>> {
             }
         }
     }
-    for (key, mut value) in adjacencies.iter_mut() {
+    for (_key, mut value) in adjacencies.iter_mut() {
         value.retain(|&x| !ascendancy_ids.contains(&x));
     }
 
