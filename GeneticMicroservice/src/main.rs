@@ -10,6 +10,7 @@ extern crate rand;
 extern crate rsgenetic;
 
 extern crate base64;
+extern crate bufstream;
 extern crate byteorder;
 
 mod json_structs;
@@ -18,13 +19,18 @@ use json_structs::*;
 mod genetic_algorithm;
 use genetic_algorithm::*;
 
+mod eval;
+use eval::TreeEvaluator;
+
 use rsgenetic::sim::select::*;
 use rsgenetic::sim::seq::Simulator;
 use rsgenetic::sim::*;
 
+use std::cell::RefCell;
 use std::rc::Rc;
 
 fn main() {
+    let mut eval = TreeEvaluator::new();
     // ********** READ TREE JSON ********** \\
     let tree_path = "Data/SkillTree.txt";
     let deserialized: Parent = get_json(tree_path);
@@ -35,9 +41,9 @@ fn main() {
     let node_map = get_node_map(&deserialized.nodes);
     let start_ids = get_starts(&adjacencies, deserialized);
 
-    let player_class: PlayerClass = PlayerClass::Scion;
+    let player_class: PlayerClass = PlayerClass::Duelist;
     let ascendant_class_id: u8 = 1;
-    let class_name: String = "SCION".to_string();
+    let class_name: String = "DUELIST".to_string();
     let version: u32 = 4;
     let threshold: u16 = 123; // number of nodes to make
 
@@ -48,6 +54,7 @@ fn main() {
         adjacencies: adjacencies,
         possible_starts: start_ids[&class_name].clone(),
         node_map: node_map.clone(),
+        evaluator: RefCell::new(eval),
     });
 
     // ********** GENERATE A RANDOM TREE ********** \\
@@ -69,8 +76,8 @@ fn main() {
     // ********** GENERATE RANDOM POPULATION ********** \\
     // make a population
     println!("\nMaking population");
-    let max_pop: usize = 20 as usize;
-    let num_parents: usize = 10 as usize;
+    let max_pop: usize = 100 as usize;
+    let num_parents: usize = 50 as usize;
     let epochs: u64 = 1000;
     let mut intermediate_pop: Vec<(Vec<u16>, Vec<u16>)> = (0..max_pop)
         .map(|_i| {
@@ -118,6 +125,5 @@ fn main() {
         tree_constants.ascendant_class_id,
         result.tree_nodes.clone(),
     );
-
     println!("{}{}", root_url, passive_skill_tree.to_string());
 }

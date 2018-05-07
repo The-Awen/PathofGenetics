@@ -1,10 +1,11 @@
+use eval::TreeEvaluator;
 use json_structs::*;
 use rand;
 use rsgenetic::pheno::*;
+use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::rc::Rc;
-
 pub struct MyFitness {
     f: f64,
 }
@@ -45,7 +46,7 @@ pub struct MyData {
     pub tree_constants: Rc<TreeConstants>,
 }
 
-#[derive(Clone)]
+//#[derive(Clone)]
 pub struct TreeConstants {
     pub version: u32,
     pub player_class: PlayerClass,
@@ -53,6 +54,7 @@ pub struct TreeConstants {
     pub adjacencies: HashMap<u16, Vec<u16>>,
     pub possible_starts: Vec<u16>,
     pub node_map: HashMap<u16, Node>,
+    pub evaluator: RefCell<TreeEvaluator>,
 }
 
 impl Phenotype<MyFitness> for MyData {
@@ -60,7 +62,11 @@ impl Phenotype<MyFitness> for MyData {
         MyFitness {
             // TODO: replace with Path of Building damage calc
             // For now, maximize life
-            f: get_life(&self.tree_nodes, &self.tree_constants.node_map),
+            //f: get_life(&self.tree_nodes, &self.tree_constants.node_map),
+            f: self.tree_constants
+                .evaluator
+                .borrow_mut()
+                .dps(&self.tree_string),
         }
     }
 

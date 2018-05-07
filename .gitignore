@@ -62,3 +62,4 @@ GeneticMicroservice/target/*
 GeneticMicroservice/Cargo.lock
 GeneticMicroservice/*.rs.bk
 GeneticMicroservice/*.swp
+GeneticMicroservice/src/*.swp
